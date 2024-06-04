@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import RestaurantPopup from "./RestaurantPopup";
 
 export interface ListRestaurantProps {
@@ -19,15 +20,26 @@ const List: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [restaurants, setRestaurants] = useState(initialRestaurants);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     fetch("http://localhost:8000/restaurants/all")
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
       .then((data) => {
         console.log(data);
         setRestaurants(data);
         console.log(restaurants);
+      })
+      .catch((error) => {
+        console.error('Fetch error:', error);
+        navigate('/404');
       });
-  }, [restaurants]);
+  }, [restaurants, navigate]);
 
   const handleRestaurantClick = (index: number) => {
     setSelectedRestaurant(restaurants[index]);

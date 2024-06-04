@@ -7,7 +7,7 @@ function App() {
   return (
         <Routes>
           <Route path="/" element={<HomePage/>} />
-          <Route path="/notfound" element={<NotFoundPage/>} />
+          <Route path="/404" element={<NotFoundPage/>} />
         </Routes>
   );
 }
