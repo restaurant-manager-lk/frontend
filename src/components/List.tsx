@@ -23,7 +23,29 @@ const List: React.FC = () => {
 
   return (
     <div className="bg-white rounded-3xl shadow-2xl border-2 ">
-      <div className="m-5 overflow-auto ">
+      <div className="flex justify-center mt-4 scale-75">
+        <button
+          type="button"
+          className="text-black border-2 border-black bg-gray-100 hover:bg-blue-500 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 4.5v15m7.5-7.5h-15"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <div className="m-5 mt-2 overflow-auto ">
         {items.length === 0 ? (
           <div className="flex flex-col items-center justify-center">
             <p>No restaurants are registered</p>
