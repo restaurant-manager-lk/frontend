@@ -1,24 +1,33 @@
 import React, { useState } from "react";
 
-interface ListItemProps {
+interface ListRestaurantProps {
   name: string;
   address: string;
   phone: string;
 }
 
 const List: React.FC = () => {
-  const initialItems: ListItemProps[] = [
+  const initialRestaurants: ListRestaurantProps[] = [
     { name: "Restaurant 1", address: "123 Main St", phone: "555-555-5555" },
     { name: "Restaurant 2", address: "456 Maple Ave", phone: "555-555-5555" },
     { name: "Restaurant 3", address: "789 Oak Dr", phone: "555-555-5555" },
   ];
 
-  const [items, setItems] = useState(initialItems);
+  const [selectedRestaurant, setSelectedRestaurant] =
+    useState<ListRestaurantProps | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [restaurants, setRestaurants] = useState(initialRestaurants);
 
-  const handleDelete = (index: number) => {
-    const newItems = [...items];
-    newItems.splice(index, 1);
-    setItems(newItems);
+  const handleRestaurantClick = (index: number) => {
+    setSelectedRestaurant(restaurants[index]);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = (event: React.MouseEvent, index: number) => {
+    event.stopPropagation();
+    const newRestaurants = [...restaurants];
+    newRestaurants.splice(index, 1);
+    setRestaurants(newRestaurants);
   };
 
   return (
@@ -46,7 +55,7 @@ const List: React.FC = () => {
       </div>
 
       <div className="m-5 mt-2 overflow-auto ">
-        {items.length === 0 ? (
+        {restaurants.length === 0 ? (
           <div className="flex flex-col items-center justify-center">
             <p>No restaurants are registered</p>
             <button className="bg-blue-500 text-white rounded px-2 py-1 mt-2">
@@ -54,23 +63,24 @@ const List: React.FC = () => {
             </button>
           </div>
         ) : (
-          items.map((item, index) => (
+          restaurants.map((restaurant, index) => (
             <div
               key={index}
-              className="flex justify-between items-center border-b border-gray-200 py-2"
+              className="flex justify-between items-center border-b border-gray-200 py-2 hover:bg-gray-200 cursor-pointer m-2 p-3 rounded-md"
+              onClick={() => handleRestaurantClick(index)}
             >
               <div className="mr-10">
                 <h2 className="font-bold">
-                  {item.name}({item.phone})
+                  {restaurant.name}({restaurant.phone})
                 </h2>
-                <p>{item.address}</p>
+                <p>{restaurant.address}</p>
               </div>
               <div>
                 <button className="bg-blue-500 text-white rounded px-2 py-1 mr-2">
                   Edit
                 </button>
                 <button
-                  onClick={() => handleDelete(index)}
+                  onClick={(event) => handleDelete(event, index)}
                   className="bg-red-500 text-white rounded px-2 py-1"
                 >
                   Delete
@@ -80,6 +90,21 @@ const List: React.FC = () => {
           ))
         )}
       </div>
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-5 rounded-3xl">
+            <h2 className="font-bold">{selectedRestaurant?.name}</h2>
+            <p>{selectedRestaurant?.address}</p>
+            <p>{selectedRestaurant?.phone}</p>
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="bg-red-500 text-white rounded px-2 py-1"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
