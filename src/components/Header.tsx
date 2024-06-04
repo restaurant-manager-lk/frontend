@@ -52,8 +52,8 @@ export default function Header() {
           </button>
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="#" className="text-base font-bold leading-6 text-gray-900">
-            Dev <span aria-hidden="true">&rarr;</span>
+          <a href="https://github.com/Shavidika" className="text-base font-bold leading-6 text-gray-900">
+            Dev Mode <span aria-hidden="true">&rarr;</span>
           </a>
         </div>
       </nav>

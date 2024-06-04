@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { ListRestaurantProps } from "./List";
+import React, { useState, useEffect } from 'react';
+import { ListRestaurantProps } from './List';
 
 interface RestaurantPopupProps {
   restaurant: ListRestaurantProps | null;
@@ -8,17 +8,13 @@ interface RestaurantPopupProps {
   index: number | null;
 }
 
-const RestaurantPopup: React.FC<RestaurantPopupProps> = ({
-  restaurant,
-  onClose,
-  onSave,
-  index,
-}) => {
+const RestaurantPopup: React.FC<RestaurantPopupProps> = ({ restaurant, onClose, onSave, index }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedRestaurant, setEditedRestaurant] = useState<ListRestaurantProps>({
-    name: "",
-    address: "",
-    phone: "",
+    _id: '',
+    name: '',
+    address: '',
+    phone: '',
   });
   const [isPhoneValid, setIsPhoneValid] = useState(true);
 
@@ -28,9 +24,10 @@ const RestaurantPopup: React.FC<RestaurantPopupProps> = ({
       setIsEditing(false); // When editing an existing restaurant, start in non-editing mode
     } else {
       setEditedRestaurant({
-        name: "",
-        address: "",
-        phone: "",
+        _id: '',
+        name: '',
+        address: '',
+        phone: '',
       });
       setIsEditing(true); // When adding a new restaurant, start in editing mode
     }
@@ -118,8 +115,6 @@ const RestaurantPopup: React.FC<RestaurantPopupProps> = ({
             className="block w-full mb-4 p-2 border rounded"
             placeholder="Phone"
             required
-            pattern="0[0-9]{9}"
-            title="Phone number must be 10 digits long and start with 0"
             disabled={!isEditing}
           />
         </div>
@@ -128,23 +123,24 @@ const RestaurantPopup: React.FC<RestaurantPopupProps> = ({
             <button
               onClick={handleSaveClick}
               className={`rounded-full px-6 py-2 ${
-                isFormValid()
-                  ? "bg-green-500 text-white"
-                  : "bg-gray-500 text-gray-300"
+                isFormValid() ? "bg-green-500 text-white" : "bg-gray-500 text-gray-300"
               }`}
-              disabled={!isFormValid()}>
+              disabled={!isFormValid()}
+            >
               Save
             </button>
           ) : (
             <button
               onClick={handleEditClick}
-              className="bg-blue-500 text-white rounded-full px-6 py-2">
+              className="bg-blue-500 text-white rounded-full px-6 py-2"
+            >
               Edit
             </button>
           )}
           <button
             onClick={onClose}
-            className="bg-red-500 text-white rounded-full px-6 py-2">
+            className="bg-red-500 text-white rounded-full px-6 py-2"
+          >
             Close
           </button>
         </div>
