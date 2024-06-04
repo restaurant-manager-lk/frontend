@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import RestaurantPopup from "./RestaurantPopup"; // import the popup component
 
-interface ListRestaurantProps {
+export interface ListRestaurantProps {
   name: string;
   address: string;
   phone: string;
@@ -13,13 +14,14 @@ const List: React.FC = () => {
     { name: "Restaurant 3", address: "789 Oak Dr", phone: "555-555-5555" },
   ];
 
-  const [selectedRestaurant, setSelectedRestaurant] =
-    useState<ListRestaurantProps | null>(null);
+  const [selectedRestaurant, setSelectedRestaurant] = useState<ListRestaurantProps | null>(null);
+  const [selectedRestaurantIndex, setSelectedRestaurantIndex] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [restaurants, setRestaurants] = useState(initialRestaurants);
 
   const handleRestaurantClick = (index: number) => {
     setSelectedRestaurant(restaurants[index]);
+    setSelectedRestaurantIndex(index);
     setIsModalOpen(true);
   };
 
@@ -30,12 +32,32 @@ const List: React.FC = () => {
     setRestaurants(newRestaurants);
   };
 
+  const handleSave = (updatedRestaurant: ListRestaurantProps, index: number | null) => {
+    const newRestaurants = [...restaurants];
+    if (index === null) {
+      // Adding a new restaurant
+      newRestaurants.push(updatedRestaurant);
+    } else {
+      // Editing an existing restaurant
+      newRestaurants[index] = updatedRestaurant;
+    }
+    setRestaurants(newRestaurants);
+    setIsModalOpen(false);
+  };
+
+  const handleAddNewRestaurant = () => {
+    setSelectedRestaurant(null);
+    setSelectedRestaurantIndex(null);
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="bg-white rounded-3xl shadow-2xl border-2 ">
       <div className="flex justify-center mt-4 scale-75">
         <button
           type="button"
           className="text-black border-2 border-black bg-gray-100 hover:bg-blue-500 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2"
+          onClick={handleAddNewRestaurant}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +80,10 @@ const List: React.FC = () => {
         {restaurants.length === 0 ? (
           <div className="flex flex-col items-center justify-center">
             <p>No restaurants are registered</p>
-            <button className="bg-blue-500 text-white rounded px-2 py-1 mt-2">
+            <button
+              className="bg-blue-500 text-white rounded px-2 py-1 mt-2"
+              onClick={handleAddNewRestaurant}
+            >
               <i className="fas fa-plus"></i>
             </button>
           </div>
@@ -91,19 +116,12 @@ const List: React.FC = () => {
         )}
       </div>
       {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-5 rounded-3xl">
-            <h2 className="font-bold">{selectedRestaurant?.name}</h2>
-            <p>{selectedRestaurant?.address}</p>
-            <p>{selectedRestaurant?.phone}</p>
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="bg-red-500 text-white rounded px-2 py-1"
-            >
-              Close
-            </button>
-          </div>
-        </div>
+        <RestaurantPopup
+          restaurant={selectedRestaurant}
+          onClose={() => setIsModalOpen(false)}
+          onSave={handleSave}
+          index={selectedRestaurantIndex}
+        />
       )}
     </div>
   );
