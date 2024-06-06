@@ -17,7 +17,6 @@ This is a Docker-based full-stack application that includes a frontend and a bac
 docker build -t frontend .
 ```
 
-Run Containers
 3. Run the frontend container:
 ```bash
 docker run -d -p 3000:3000 frontend

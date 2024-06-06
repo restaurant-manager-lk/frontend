@@ -18,6 +18,7 @@ const List: React.FC = () => {
     number | null
   >(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [restaurants, setRestaurants] = useState(initialRestaurants);
 
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const List: React.FC = () => {
         console.error('Fetch error:', error);
         navigate('/404');
       });
-  }, [restaurants, navigate]);
+  }, [navigate]);
 
   const handleRestaurantClick = (index: number) => {
     setSelectedRestaurant(restaurants[index]);
@@ -80,12 +81,20 @@ const List: React.FC = () => {
         },
         body: JSON.stringify(updatedRestaurant),
       })
-        .then((response) => response.json())
+        .then((response) => {
+          if (response.status === 409) {
+            throw new Error('This restaurant already exists');
+          }
+          return response.json();
+        })
         .then((data) => {
           console.log(data);
           newRestaurants.push(data);
           setRestaurants(newRestaurants);
           setIsModalOpen(false);
+        })
+        .catch((error) => {
+          setErrorMessage(error.message);
         });
     } else {
       fetch(
@@ -98,22 +107,32 @@ const List: React.FC = () => {
           body: JSON.stringify(updatedRestaurant),
         }
       )
-        .then((response) => response.json())
+        .then((response) => {
+          if (response.status === 409) {
+            throw new Error('This restaurant already exists');
+          }
+          return response.json();
+        })
         .then((data) => {
           console.log(data);
           newRestaurants[index] = data;
           setRestaurants(newRestaurants);
           setIsModalOpen(false);
+        })
+        .catch((error) => {
+          setErrorMessage(error.message);
         });
     }
-    setRestaurants(newRestaurants);
-    setIsModalOpen(false);
   };
 
   const handleAddNewRestaurant = () => {
     setSelectedRestaurant(null);
     setSelectedRestaurantIndex(null);
     setIsModalOpen(true);
+  };
+
+  const handleCloseErrorPopup = () => {
+    setErrorMessage(null);
   };
 
   return (
@@ -145,12 +164,7 @@ const List: React.FC = () => {
         {restaurants.length === 0 ? (
           <div className="flex flex-col items-center justify-center">
             <p>No restaurants are registered</p>
-            <button
-              className="bg-blue-500 text-white rounded px-2 py-1 mt-2"
-              onClick={handleAddNewRestaurant}
-            >
-              <i className="fas fa-plus"></i>
-            </button>
+            <p className="text-xs">Click the + button to add a new restaurant</p>
           </div>
         ) : (
           restaurants.map((restaurant, index) => (
@@ -195,6 +209,20 @@ const List: React.FC = () => {
           onSave={handleSave}
           index={selectedRestaurantIndex}
         />
+      )}
+      {errorMessage && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded shadow-lg">
+            <h2 className="text-xl font-bold mb-4">Error</h2>
+            <p>{errorMessage}</p>
+            <button
+              className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
+              onClick={handleCloseErrorPopup}
+            >
+              Close
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
