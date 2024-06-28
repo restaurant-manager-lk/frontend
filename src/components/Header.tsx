@@ -53,7 +53,7 @@ export default function Header() {
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <a href="https://github.com/Shavidika" className="text-base font-bold leading-6 text-gray-900">
-            Dev Profile <span aria-hidden="true">&rarr;</span>
+            Developer Profile <span aria-hidden="true">&rarr;</span>
           </a>
         </div>
       </nav>
