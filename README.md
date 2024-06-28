@@ -1,6 +1,6 @@
 # Docker-Based Full-Stack Application (Frontennd)
 
-This is a Docker-based full-stack application that includes a frontend and a backend connected to a MongoDB database..
+This is a Docker-based full-stack application that includes a frontend and a backend connected to a MongoDB database.
 
 ## Prerequisites
 
